@@ -1,9 +1,9 @@
 {
-  description = "Python project template using poetry2nix";
+  description = "development project templates";
 
-  outputs = { self }: {
+  outputs = { }: {
     templates.python = {
-      path = ./template;
+      path = ./template/python;
       description = "Python project template with poetry2nix";
     };
   };
