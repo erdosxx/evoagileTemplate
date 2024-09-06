@@ -13,6 +13,7 @@ dev:
   nix develop ".#poetry" 
 
 qt:
+  herbstclient chain , split right 0.618 , focus right
   jupyter qtconsole --kernel=python3 &
 
 up:
