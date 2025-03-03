@@ -8,17 +8,17 @@ Templates to setup julia, python, bash programming environment.
 
 ### python
 ```sh
-nix flake init --template github:erdosxx/evoagileTemplate\#templates.python
+nix flake init --template github:erdosxx/evoagileTemplate\#template.python
 ```
 
 ### bash
 ```sh
-nix flake init --template github:erdosxx/evoagileTemplate\#templates.bash
+nix flake init --template github:erdosxx/evoagileTemplate\#template.bash
 ```
 
 ### Julia
 ```sh
-nix flake init --template github:erdosxx/evoagileTemplate\#templates.julia
+nix flake init --template github:erdosxx/evoagileTemplate\#template.julia
 ```
 
 # Attribution
