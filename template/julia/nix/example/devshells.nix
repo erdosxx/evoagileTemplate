@@ -78,7 +78,7 @@ in l.mapAttrs (_: mkShell) {
         category = "Init";
         help = "Generate PkgTemplate in tmp: gentp <GitUserName>";
         command = ''
-          julia nix/example/pkgTemplate/genprj.jl $1 $(pgr).jl tmp
+          julia nix/example/pkgTemplate/genprj.jl $1 $(gpr).jl tmp
         '';
       }
       {
