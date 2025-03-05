@@ -1,4 +1,4 @@
-using juliaEnvTest
+using {{PRJ_ROOT}}
 using Test
 
 tests = [
