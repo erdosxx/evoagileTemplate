@@ -117,35 +117,27 @@ in l.mapAttrs (_: mkShell) {
         '';
       }
       {
-        name = "gls";
+        name = "ghrls";
         category = "github";
-        help = "gls <github user>: check repostitory status";
+        help = "ghrls <github user>: check repostitory status";
         command = ''
           ${gh} repo ls $1 --limit=1000
         '';
       }
       {
-        name = "ghls";
-        category = "github";
-        help = "gls <github user>: check repostitory status";
-        command = ''
-          ${gh} repo ls $1 --limit=1000
-        '';
-      }
-      {
-        name = "ghcc";
+        name = "ghrcc";
         category = "github";
         help =
-          "ghcc <repo_name> <private|perblic> <repo_owner>: create github repo";
+          "ghrcc <repo_name> <private|perblic> <repo_owner>: create github repo";
         command = ''
           ${gh} repo create "$3/$1" --$2
         '';
       }
       {
-        name = "ghed";
+        name = "ghred";
         category = "github";
         help =
-          "ghed <repo_name> <private|perblic> <repo_owner>: create github repo";
+          "ghred <repo_name> <private|perblic> <repo_owner>: create github repo";
         command = ''
           ${gh} repo edit "$3/$1" --visibility $2 \
           --accept-visibility-change-consequences
