@@ -73,7 +73,7 @@ in l.mapAttrs (_: mkShell) {
         command = ''
           setupTmp
           gentp tmp
-          GEN_DIR="tmp/''${PRJ_NAME}.jl"
+          GEN_DIR="tmp/''${PRJ_ROOT}"
           cp ''${GEN_DIR}/LICENSE .
           cp ''${GEN_DIR}/.gitignore .
           cp ''${GEN_DIR}/.JuliaFormatter.toml .
@@ -90,16 +90,25 @@ in l.mapAttrs (_: mkShell) {
         category = "Init";
         help = "gentp <tmp_dir> :Generate PkgTemplate in tmp: ";
         command = ''
-          julia nix/example/pkgTemplate/genprj.jl ''${GH_USER} ''${PRJ_NAME}.jl $1
+          julia nix/example/pkgTemplate/genprj.jl ''${GH_USER} ''${PRJ_ROOT} $1
         '';
       }
       {
         name = "gpr";
         category = "Init";
-        help = "get project root dir without jl extension";
+        help = "get project root dir";
         command = ''
           PWD=$(pwd)
           baseName=$(basename $(echo $PWD))
+          echo $baseName
+        '';
+      }
+      {
+        name = "gprn";
+        category = "Init";
+        help = "get project root dir without jl extension";
+        command = ''
+          baseName=$(gpr)
           name_only="''${baseName%.*}"
           echo $name_only
         '';
@@ -118,11 +127,11 @@ in l.mapAttrs (_: mkShell) {
         category = "Init";
         help = "Setup nix template with project root";
         command = ''
-          repSed src/ProjectName.jl $PRJ_NAME $prj_root
+          repSed src/ProjectName.jl PRJ_ROOT $PRJ_ROOT
           mv src/ProjectName.jl src/''${PRJ_NAME}.jl
 
-          repSed test/runtests.jl $PRJ_NAME $prj_root
-          repSed test/sample/tests.jl $PRJ_NAME $prj_root
+          repSed test/runtests.jl PRJ_ROOT $PRJ_ROOT
+          repSed test/sample/tests.jl PRJ_ROOT $PRJ_ROOT
         '';
       }
       {
@@ -169,8 +178,12 @@ in l.mapAttrs (_: mkShell) {
         eval = "$(${gh} api user --jq '.login')";
       }
       {
-        name = "PRJ_NAME";
+        name = "PRJ_ROOT";
         eval = "$(gpr)";
+      }
+      {
+        name = "PRJ_NAME";
+        eval = "$(gprn)";
       }
       # {
       #   name = "JULIA_CUDA_USE_BINARYBUILDER";
