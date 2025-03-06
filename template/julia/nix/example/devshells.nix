@@ -12,6 +12,7 @@ let
   # };
   inherit (l) getExe;
   sed = getExe pkgs.gnused;
+  gh = getExe pkgs.github-cli;
 in l.mapAttrs (_: mkShell) {
   default = { ... }: {
     name = "example devshell";
@@ -113,6 +114,41 @@ in l.mapAttrs (_: mkShell) {
 
           repSed test/runtests.jl PRJ_ROOT $prj_root
           repSed test/sample/tests.jl PRJ_ROOT $prj_root
+        '';
+      }
+      {
+        name = "gls";
+        category = "github";
+        help = "gls <github user>: check repostitory status";
+        command = ''
+          ${gh} repo ls $1 --limit=1000
+        '';
+      }
+      {
+        name = "ghls";
+        category = "github";
+        help = "gls <github user>: check repostitory status";
+        command = ''
+          ${gh} repo ls $1 --limit=1000
+        '';
+      }
+      {
+        name = "ghcc";
+        category = "github";
+        help =
+          "ghcc <repo_name> <private|perblic> <repo_owner>: create github repo";
+        command = ''
+          ${gh} repo create "$3/$1" --$2
+        '';
+      }
+      {
+        name = "ghed";
+        category = "github";
+        help =
+          "ghed <repo_name> <private|perblic> <repo_owner>: create github repo";
+        command = ''
+          ${gh} repo edit "$3/$1" --visibility $2 \
+          --accept-visibility-change-consequences
         '';
       }
     ];

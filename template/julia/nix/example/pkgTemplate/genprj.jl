@@ -16,11 +16,13 @@ function genGithubRepo2(userName::String, repoName::String, dir::String)
   templateGithub = Template(;
     user=userName,
     dir=dir,
-    julia=v"1",  # for [compat] section in Project.toml
+    julia=v"1.8",  # for [compat] section in Project.toml
     plugins=[
       # Use semantic version, See Julia Pattern book page 43.
       ProjectFile(; version=v"1.0.0-DEV"),
       License(; name="MIT", path=nothing, destination="LICENSE"),
+      Formatter(;
+        file = joinpath(@__DIR__, ".JuliaFormatter.toml"), style = "sciml"),
       Git(;
         branch=LibGit2.getconfig("init.defaultBranch", "master"),
         ssh=true,
