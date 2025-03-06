@@ -71,23 +71,26 @@ in l.mapAttrs (_: mkShell) {
         category = "Init";
         help = "Setup project with PkgTemplate";
         command = ''
-          gentp $GH_USER
-          cp tmp/$(gpr).jl/LICENSE .
-          cp tmp/$(gpr).jl/.gitignore .
-          cp tmp/$(gpr).jl/.JuliaFormatter.toml .
-          cp tmp/$(gpr).jl/Manifest.toml .
-          cp tmp/$(gpr).jl/Project.toml .
-          cp tmp/$(gpr).jl/README.md .
-          cp -r tmp/$(gpr).jl/docs .
-          cp -r tmp/$(gpr).jl/.github .
+          setupTmp
+          gentp tmp
+          GEN_DIR="tmp/''${PRJ_NAME}.jl"
+          cp ''${GEN_DIR}/LICENSE .
+          cp ''${GEN_DIR}/.gitignore .
+          cp ''${GEN_DIR}/.JuliaFormatter.toml .
+          cp ''${GEN_DIR}/Manifest.toml .
+          cp ''${GEN_DIR}/Project.toml .
+          cp ''${GEN_DIR}/README.md .
+          cp -r ''${GEN_DIR}/docs .
+          cp -r ''${GEN_DIR}/.github .
+          rm -rf tmp
         '';
       }
       {
         name = "gentp";
         category = "Init";
-        help = "Generate PkgTemplate in tmp: gentp <GitUserName>";
+        help = "gentp <tmp_dir> :Generate PkgTemplate in tmp: ";
         command = ''
-          julia nix/example/pkgTemplate/genprj.jl $1 $(gpr).jl tmp
+          julia nix/example/pkgTemplate/genprj.jl ''${GH_USER} ''${PRJ_NAME}.jl $1
         '';
       }
       {
@@ -115,39 +118,37 @@ in l.mapAttrs (_: mkShell) {
         category = "Init";
         help = "Setup nix template with project root";
         command = ''
-          prj_root=$(gpr)
+          repSed src/ProjectName.jl $PRJ_NAME $prj_root
+          mv src/ProjectName.jl src/''${PRJ_NAME}.jl
 
-          repSed src/ProjectName.jl PRJ_ROOT $prj_root
-          mv src/ProjectName.jl src/"$prj_root".jl
-
-          repSed test/runtests.jl PRJ_ROOT $prj_root
-          repSed test/sample/tests.jl PRJ_ROOT $prj_root
+          repSed test/runtests.jl $PRJ_NAME $prj_root
+          repSed test/sample/tests.jl $PRJ_NAME $prj_root
         '';
       }
       {
         name = "ghrls";
         category = "github";
-        help = "ghrls <github user>: check repostitory status";
+        help = "ghrls: check repostitory status";
         command = ''
-          ${gh} repo ls $1 --limit=1000
+          ${gh} repo ls $GH_USER --limit=1000
         '';
       }
       {
         name = "ghrcc";
         category = "github";
         help =
-          "ghrcc <repo_name> <private|perblic> <repo_owner>: create github repo";
+          "ghrcc <repo_name> <private|public> : create github repo";
         command = ''
-          ${gh} repo create "$3/$1" --$2
+          ${gh} repo create "''${GH_USER}/$1" --$2
         '';
       }
       {
         name = "ghred";
         category = "github";
         help =
-          "ghred <repo_name> <private|perblic> <repo_owner>: create github repo";
+          "ghred <repo_name> <private|perblic>: create github repo";
         command = ''
-          ${gh} repo edit "$3/$1" --visibility $2 \
+          ${gh} repo edit "''${GH_USER}/$1" --visibility $2 \
           --accept-visibility-change-consequences
         '';
       }
