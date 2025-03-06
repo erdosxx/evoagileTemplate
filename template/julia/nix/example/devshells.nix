@@ -155,7 +155,7 @@ in l.mapAttrs (_: mkShell) {
         name = "ghred";
         category = "github";
         help =
-          "ghred <private|perblic>: create github repo";
+          "ghred <private|perblic>: change github visibility";
         command = ''
           ${gh} repo edit "''${GH_USER}/''${PRJ_ROOT}" --visibility $1 \
           --accept-visibility-change-consequences
