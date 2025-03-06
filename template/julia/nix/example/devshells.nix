@@ -67,11 +67,19 @@ in l.mapAttrs (_: mkShell) {
         '';
       }
       {
-        name = "getinput";
-        category = "Gen Code";
-        help = "Get first input parameter";
+        name = "stupp";
+        category = "Init";
+        help = "Setup project with PkgTemplate";
         command = ''
-          echo $1
+          gentp $GH_USER
+          cp tmp/$(gpr).jl/LICENSE .
+          cp tmp/$(gpr).jl/.gitignore .
+          cp tmp/$(gpr).jl/.JuliaFormatter.toml .
+          cp tmp/$(gpr).jl/Manifest.toml .
+          cp tmp/$(gpr).jl/Project.toml .
+          cp tmp/$(gpr).jl/README.md .
+          cp -r tmp/$(gpr).jl/docs .
+          cp -r tmp/$(gpr).jl/.github .
         '';
       }
       {
@@ -154,6 +162,14 @@ in l.mapAttrs (_: mkShell) {
       {
         name = "JULIA_GL_BACKEND";
         value = "glx";
+      }
+      {
+        name = "GH_USER";
+        eval = "$(${gh} api user --jq '.login')";
+      }
+      {
+        name = "PRJ_NAME";
+        eval = "$(gpr)";
       }
       # {
       #   name = "JULIA_CUDA_USE_BINARYBUILDER";
