@@ -1,4 +1,4 @@
-using {{PRJ_ROOT}}
+using {{PRJ_NAME}}
 using Test
 
 tests = [

@@ -127,11 +127,11 @@ in l.mapAttrs (_: mkShell) {
         category = "Init";
         help = "Setup nix template with project root";
         command = ''
-          repSed src/ProjectName.jl PRJ_ROOT $PRJ_ROOT
+          repSed src/ProjectName.jl PRJ_NAME $PRJ_NAME
           mv src/ProjectName.jl src/''${PRJ_NAME}.jl
 
-          repSed test/runtests.jl PRJ_ROOT $PRJ_ROOT
-          repSed test/sample/tests.jl PRJ_ROOT $PRJ_ROOT
+          repSed test/runtests.jl PRJ_NAME $PRJ_NAME
+          repSed test/sample/tests.jl PRJ_NAME $PRJ_NAME
         '';
       }
       {
