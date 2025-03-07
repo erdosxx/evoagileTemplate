@@ -29,6 +29,7 @@ in l.mapAttrs (_: mkShell) {
           # "GLMakie"
           "CairoMakie"
           "Documenter"
+          "Coverage"
         ])
       ];
 
@@ -161,8 +162,7 @@ in l.mapAttrs (_: mkShell) {
       {
         name = "ghrcc";
         category = "github";
-        help =
-          "ghrcc <repo_name> <private|public> : create github repo";
+        help = "ghrcc <repo_name> <private|public> : create github repo";
         command = ''
           ${gh} repo create "''${GH_USER}/$1" --$2
         '';
@@ -170,8 +170,7 @@ in l.mapAttrs (_: mkShell) {
       {
         name = "ghred";
         category = "github";
-        help =
-          "ghred <private|perblic>: change github visibility";
+        help = "ghred <private|perblic>: change github visibility";
         command = ''
           ${gh} repo edit "''${GH_USER}/''${PRJ_ROOT}" --visibility $1 \
           --accept-visibility-change-consequences
