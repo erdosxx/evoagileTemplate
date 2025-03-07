@@ -1,6 +1,6 @@
 module PkgUtil
 
-using PkgTemplates
+import PkgTemplates as PT
 using LibGit2
 using Coverage
 using Pkg
@@ -11,24 +11,24 @@ using Pkg
 # in the julia REPL
 # julia> PkgUtil.genGithubRepo("evoagile", "repoName.jl", "~/localgit")
 function genGithubRepo(userName::String, repoName::String, dir::String)
-  templateGithub = Template(;
+  templateGithub = PT.Template(;
     user = userName,
     dir = dir,
     julia = v"1.8",  # for [compat] section in Project.toml
     plugins = [
       # Use semantic version, See Julia Pattern book page 43.
-      ProjectFile(; version = v"1.0.0-DEV"),
-      License(; name = "MIT", path = nothing, destination = "LICENSE"),
-      Formatter(;
+      PT.ProjectFile(; version = v"1.0.0-DEV"),
+      PT.License(; name = "MIT", path = nothing, destination = "LICENSE"),
+      PT.Formatter(;
         file = joinpath(@__DIR__, ".JuliaFormatter.toml"), style = "sciml"),
-      Git(;
+      PT.Git(;
         branch = LibGit2.getconfig("init.defaultBranch", "master"),
         ssh = true,
         jl = true,
         manifest = false,
         ignore = [".data"]
       ),
-      GitHubActions(;
+      PT.GitHubActions(;
         destination = "CI.yml",
         linux = true,
         osx = false,
@@ -37,12 +37,12 @@ function genGithubRepo(userName::String, repoName::String, dir::String)
         x86 = false,
         coverage = true,
         extra_versions = ["1.8", "1.9", "1.10", "1.11", "nightly"]),
-      CompatHelper(; destination = "CompatHelper.yml", cron = "0 0 * * *"),
-      TagBot(;
+      PT.CompatHelper(; destination = "CompatHelper.yml", cron = "0 0 * * *"),
+      PT.TagBot(;
         destination = "TagBot.yml",
         trigger = "JuliaTagBot",
-        token = Secret("GITHUB_TOKEN"),
-        ssh = Secret("DOCUMENTER_KEY"),
+        token = PT.Secret("GITHUB_TOKEN"),
+        ssh = PT.Secret("DOCUMENTER_KEY"),
         ssh_password = nothing,
         changelog = nothing,
         changelog_ignore = nothing,
@@ -52,19 +52,19 @@ function genGithubRepo(userName::String, repoName::String, dir::String)
         branches = nothing,
         dispatch = nothing,
         dispatch_delay = nothing),
-      Codecov(),
-      Documenter{GitHubActions}(logo = Logo(;
+      PT.Codecov(),
+      PT.Documenter{PT.GitHubActions}(logo = PT.Logo(;
         light = joinpath(@__DIR__, "logo", "logo.png"),
         dark = joinpath(@__DIR__, "logo", "logo-dark.png"))),
       # light="./logo/logo.png",
       # dark="./logo/logo-dark.png")),
-      Dependabot()
+      PT.Dependabot()
     ])
-  generate(templateGithub, repoName)
+  PT.generate(templateGithub, repoName)
 end
 
-function test(; coverage = true, test_args = String[])
-  Pkg.test(; coverage, julia_args = ["--inline=no"], test_args)
+function test(target::String; coverage = true, test_args = String[])
+  Pkg.test(target; coverage, julia_args = ["--inline=no"], test_args)
   if coverage
     LCOV.writefile("lcov.info", process_folder())
   end

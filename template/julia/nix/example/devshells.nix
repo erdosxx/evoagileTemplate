@@ -99,7 +99,7 @@ in l.mapAttrs (_: mkShell) {
         category = "Julia";
         help = "Generate test coverage";
         command = ''
-          julia nix/example/pkgTemplate/gencov.jl
+          julia nix/example/pkgTemplate/gencov.jl ''${PRJ_NAME}
         '';
       }
       {

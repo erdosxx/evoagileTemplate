@@ -1,3 +1,8 @@
 include("PkgUtil.jl")
 
-PkgUtil.test(;coverage=true)
+if length(ARGS) >= 1
+  pkgname = ARGS[1]
+  PkgUtil.test(pkgname; coverage = true)
+else
+  println("Usage: julia gencov.jl <pkgname>")
+end
