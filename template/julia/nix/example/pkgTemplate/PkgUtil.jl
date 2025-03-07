@@ -2,7 +2,7 @@ module PkgUtil
 
 import PkgTemplates as PT
 using LibGit2
-using Coverage
+import Coverage as CV
 using Pkg
 
 # Generate GitHub repository with GitHubActions.
@@ -66,12 +66,12 @@ end
 function test(target::String; coverage = true, test_args = String[])
   Pkg.test(target; coverage, julia_args = ["--inline=no"], test_args)
   if coverage
-    LCOV.writefile("lcov.info", process_folder())
+    CV.LCOV.writefile("lcov.info", CV.process_folder())
   end
 end
 
 function cleanup()
-  Coverage.clean_folder(".")
+  CV.clean_folder(".")
 end
 
 end
