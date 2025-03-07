@@ -1,8 +1,8 @@
 # {{{PKG}}}
 
 <p align="center">
-    <img width="400px" src="https://raw.githubusercontent.com/erdosxx/{{{PKG}}}/master/docs/src/assets/logo.png#gh-light-mode-only"/>
-    <img width="400px" src="https://raw.githubusercontent.com/erdosxx/{{{PKG}}}/master/docs/src/assets/logo-dark.png#gh-dark-mode-only"/>
+    <img width="400px" src="docs/src/assets/logo.png#gh-light-mode-only"/>
+    <img width="400px" src="docs/src/assets/logo-dark.png#gh-dark-mode-only"/>
 </p>
 <!-- <img src="docs/src/assets/logo.png" width="300" /> -->
 
