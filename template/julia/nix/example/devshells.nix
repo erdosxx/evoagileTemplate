@@ -91,7 +91,7 @@ in l.mapAttrs (_: mkShell) {
         category = "Init";
         help = "gentp <tmp_dir> :Generate PkgTemplate in <tmp_dir>: ";
         command = ''
-          julia nix/example/pkgTemplate/genprj.jl ''${GH_USER} ''${PRJ_ROOT} $1
+          julia nix/example/pkgTemplate/genprj.jl $GH_USER $PRJ_ROOT $1
         '';
       }
       {
@@ -99,7 +99,7 @@ in l.mapAttrs (_: mkShell) {
         category = "Julia";
         help = "Generate test coverage";
         command = ''
-          julia nix/example/pkgTemplate/gencov.jl ''${PRJ_NAME}
+          julia nix/example/pkgTemplate/gencov.jl $PRJ_ROOT
         '';
       }
       {
