@@ -97,9 +97,9 @@ in l.mapAttrs (_: mkShell) {
       {
         name = "gcov";
         category = "Julia";
-        help = "Generate test coverage";
+        help = "gcov :Generate test coverage";
         command = ''
-          julia nix/example/pkgTemplate/gencov.jl $PRJ_ROOT
+          julia nix/example/pkgTemplate/gencov.jl $1
         '';
       }
       {
