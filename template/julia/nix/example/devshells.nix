@@ -107,7 +107,7 @@ in l.mapAttrs (_: mkShell) {
         category = "Julia";
         help = "Clean .cov coverage files";
         command = ''
-          julia nix/example/pkgTemplate/covclean.jl
+          julia --project=. nix/example/pkgTemplate/covclean.jl
         '';
       }
       {
