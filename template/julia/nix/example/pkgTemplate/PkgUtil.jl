@@ -21,7 +21,7 @@ function genGithubRepo(userName::String, repoName::String, dir::String)
       PT.License(; name = "MIT", path = nothing, destination = "LICENSE"),
       PT.Formatter(;
         file = joinpath(@__DIR__, ".JuliaFormatter.toml"), style = "sciml"),
-      Readme(;
+      PT.Readme(;
         file = joinpath(@__DIR__, "README.md"),
         destination = "README.md",
         inline_badges = false
