@@ -88,9 +88,25 @@ in l.mapAttrs (_: mkShell) {
       {
         name = "gentp";
         category = "Init";
-        help = "gentp <tmp_dir> :Generate PkgTemplate in tmp: ";
+        help = "gentp <tmp_dir> :Generate PkgTemplate in <tmp_dir>: ";
         command = ''
           julia nix/example/pkgTemplate/genprj.jl ''${GH_USER} ''${PRJ_ROOT} $1
+        '';
+      }
+      {
+        name = "gcov";
+        category = "Julia";
+        help = "Generate test coverage";
+        command = ''
+          julia nix/example/pkgTemplate/gencov.jl
+        '';
+      }
+      {
+        name = "covcln";
+        category = "Julia";
+        help = "Clean .cov coverage files";
+        command = ''
+          julia nix/example/pkgTemplate/covclean.jl
         '';
       }
       {
