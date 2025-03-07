@@ -26,7 +26,7 @@ function genGithubRepo(userName::String, repoName::String, dir::String)
         ssh = true,
         jl = true,
         manifest = false,
-        ignore = [".data"]
+        ignore = [".data", "lcov.info"]
       ),
       PT.GitHubActions(;
         destination = "CI.yml",
@@ -63,7 +63,7 @@ function genGithubRepo(userName::String, repoName::String, dir::String)
   PT.generate(templateGithub, repoName)
 end
 
-function test(target::String; coverage = true, test_args = String[])
+function covtest(target::String; coverage = true, test_args = String[])
   Pkg.test(target; coverage, julia_args = ["--inline=no"], test_args)
   if coverage
     CV.LCOV.writefile("lcov.info", CV.process_folder())
