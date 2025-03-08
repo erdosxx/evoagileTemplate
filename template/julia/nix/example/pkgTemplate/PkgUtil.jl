@@ -34,6 +34,7 @@ function genGithubRepo(userName::String, repoName::String, dir::String)
         ignore = [".data", "lcov.info"]
       ),
       PT.GitHubActions(;
+        file = joinpath(@__DIR__, "CI.yml"),
         destination = "CI.yml",
         linux = true,
         osx = false,
