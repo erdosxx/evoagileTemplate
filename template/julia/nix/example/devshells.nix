@@ -15,7 +15,7 @@ let
   gh = getExe pkgs.github-cli;
 in l.mapAttrs (_: mkShell) {
   default = { ... }: {
-    name = "example devshell";
+    name = "Julia devshell";
 
     imports = [ std.std.devshellProfiles.default ];
 
@@ -43,7 +43,7 @@ in l.mapAttrs (_: mkShell) {
         command = ''nvim "$@"'';
       }
       {
-        name = "jltest";
+        name = "jlt";
         category = "Julia";
         help = "Run all tests";
         command = ''
@@ -51,7 +51,7 @@ in l.mapAttrs (_: mkShell) {
         '';
       }
       {
-        name = "gendoc";
+        name = "gdoc";
         category = "Julia";
         help = "Generate document by Documemter";
         command = ''
@@ -103,7 +103,7 @@ in l.mapAttrs (_: mkShell) {
         '';
       }
       {
-        name = "covcln";
+        name = "cln";
         category = "Julia";
         help = "Clean .cov coverage files";
         command = ''
@@ -152,7 +152,7 @@ in l.mapAttrs (_: mkShell) {
         '';
       }
       {
-        name = "ghrls";
+        name = "gls";
         category = "github";
         help = "ghrls: check repostitory status";
         command = ''
@@ -160,7 +160,7 @@ in l.mapAttrs (_: mkShell) {
         '';
       }
       {
-        name = "ghrcc";
+        name = "gcr";
         category = "github";
         help = "ghrcc <repo_name> <private|public> : create github repo";
         command = ''
@@ -168,12 +168,20 @@ in l.mapAttrs (_: mkShell) {
         '';
       }
       {
-        name = "ghred";
+        name = "ged";
         category = "github";
         help = "ghred <private|perblic>: change github visibility";
         command = ''
           ${gh} repo edit "''${GH_USER}/''${PRJ_ROOT}" --visibility $1 \
           --accept-visibility-change-consequences
+        '';
+      }
+      {
+        name = "gph";
+        category = "github";
+        help = "git push origin HEAD";
+        command = ''
+          ${gh} push origin HEAD
         '';
       }
     ];
