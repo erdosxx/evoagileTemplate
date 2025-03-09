@@ -13,6 +13,7 @@ let
   inherit (l) getExe;
   sed = getExe pkgs.gnused;
   gh = getExe pkgs.github-cli;
+  git = getExe pkgs.git;
 in l.mapAttrs (_: mkShell) {
   default = { ... }: {
     name = "Julia devshell";
@@ -181,7 +182,7 @@ in l.mapAttrs (_: mkShell) {
         category = "github";
         help = "git push origin HEAD";
         command = ''
-          ${gh} push origin HEAD
+          ${git} push origin HEAD
         '';
       }
     ];
