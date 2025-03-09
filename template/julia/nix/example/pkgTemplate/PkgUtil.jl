@@ -62,8 +62,6 @@ function genGithubRepo(userName::String, repoName::String, dir::String)
       PT.Documenter{PT.GitHubActions}(logo = PT.Logo(;
         light = joinpath(@__DIR__, "logo", "logo.png"),
         dark = joinpath(@__DIR__, "logo", "logo-dark.png"))),
-      # light="./logo/logo.png",
-      # dark="./logo/logo-dark.png")),
       PT.Dependabot()
     ])
   PT.generate(templateGithub, repoName)

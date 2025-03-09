@@ -73,7 +73,6 @@ jobs:
       <<#HAS_CODECOV>>
       - uses: codecov/codecov-action@v5
         with:
-          files: lcov.info
           slug: <<&USER>>/<<&PKG>>.jl
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
