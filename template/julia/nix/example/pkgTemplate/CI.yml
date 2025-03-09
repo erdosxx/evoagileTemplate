@@ -58,13 +58,14 @@ jobs:
             xorg-dev mesa-utils xvfb libgl1 freeglut3-dev \
             libxrandr-dev libxinerama-dev libxcursor-dev \
             libxi-dev libxext-dev
-      - name: Run tests with GLMakie
+      - name: To resolve error about GLMakie by xvfb
         run: |
           xvfb-run --auto-servernum --server-args="-screen 0 1024x768x24" \
             julia --color=yes --project=. \
             -e '
             using Pkg;
             Pkg.instantiate();
+            Pkg.test();
             '
       - uses: julia-actions/cache@v2
       - uses: julia-actions/julia-buildpkg@v1
