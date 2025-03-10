@@ -199,7 +199,9 @@ in l.mapAttrs (_: mkShell) {
       }
       {
         name = "GH_USER";
-        eval = "$(${gh} api user --jq '.login')";
+        eval = ''
+          ${git} config --get remote.origin.url | ${sed} -n 's/.*github.com[:/]([^/]*)/.*/1/p'
+        '';
       }
       {
         name = "PRJ_ROOT";
