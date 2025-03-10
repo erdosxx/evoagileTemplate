@@ -200,7 +200,7 @@ in l.mapAttrs (_: mkShell) {
       {
         name = "GH_USER";
         eval = ''
-          ${git} config --get remote.origin.url | ${sed} -n 's/.*github.com[:/]([^/]*)/.*/1/p'
+          $(${git} config --get remote.origin.url | ${sed} -n 's/.*github.com[:\/]\([^\/]*\)\/.*/\1/p')
         '';
       }
       {
