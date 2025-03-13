@@ -30,6 +30,8 @@ in l.mapAttrs (_: mkShell) {
           "CairoMakie"
           "Documenter"
           "Coverage"
+          "OhMyREPL"
+          "Revise"
           "SpecialFunctions"
           # "GLMakie"
           "Makie"
