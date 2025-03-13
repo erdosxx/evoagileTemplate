@@ -27,10 +27,12 @@ in l.mapAttrs (_: mkShell) {
           "Plots"
           "GraphRecipes"
           "Graphs"
-          # "GLMakie"
           "CairoMakie"
           "Documenter"
           "Coverage"
+          "SpecialFunctions"
+          # "GLMakie"
+          "Makie"
         ])
       ];
 
