@@ -58,9 +58,14 @@ jobs:
             xorg-dev mesa-utils xvfb libgl1 freeglut3-dev \
             libxrandr-dev libxinerama-dev libxcursor-dev \
             libxi-dev libxext-dev
-      - name: To resolve error about GLMakie by xvfb
+      - name: Set up Xvfb
         run: |
-          xvfb-run --auto-servernum --server-args="-screen 0 1024x768x24" \
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+      - name: Pkg instantiate with DISPLAY
+        env:
+          DISPLAY: :99.0
+        run: |
             julia --color=yes --project=. \
             -e '
             using Pkg;
@@ -95,8 +100,20 @@ jobs:
       - uses: julia-actions/setup-julia@v2
         with:
           version: '1'
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y \
+            xorg-dev mesa-utils xvfb libgl1 freeglut3-dev \
+            libxrandr-dev libxinerama-dev libxcursor-dev \
+            libxi-dev libxext-dev
+      - name: Set up Xvfb
+        run: |
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
       - uses: julia-actions/cache@v2
       - name: Configure doc environment
+        env:
+          DISPLAY: :99.0
         shell: julia --project=docs --color=yes {0}
         run: |
           using Pkg
@@ -112,7 +129,13 @@ jobs:
         run: |
           using Documenter: DocMeta, doctest
           using <<&PKG>>
-          DocMeta.setdocmeta!(<<&PKG>>, :DocTestSetup, :(using <<&PKG>>); recursive=true)
+          DocMeta.setdocmeta!(<<&PKG>>, :DocTestSetup,
+            quote
+              using  <<&PKG>>
+              using <<&PKG>>.sampleGraph
+              using <<&PKG>>.sampleMod: addone
+            end;
+          recursive=true)
           doctest(<<&PKG>>)
   <</HAS_DOCUMENTER>>
   <<#HAS_RUNIC>>

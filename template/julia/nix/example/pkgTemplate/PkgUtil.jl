@@ -31,7 +31,7 @@ function genGithubRepo(userName::String, repoName::String, dir::String)
         ssh = true,
         jl = true,
         manifest = false,
-        ignore = [".data" ]
+        ignore = [".data"]
       ),
       PT.GitHubActions(;
         file = joinpath(@__DIR__, "CI.yml"),
@@ -59,9 +59,14 @@ function genGithubRepo(userName::String, repoName::String, dir::String)
         dispatch = nothing,
         dispatch_delay = nothing),
       PT.Codecov(),
-      PT.Documenter{PT.GitHubActions}(logo = PT.Logo(;
-        light = joinpath(@__DIR__, "logo", "logo.png"),
-        dark = joinpath(@__DIR__, "logo", "logo-dark.png"))),
+      PT.Documenter{PT.GitHubActions}(
+        logo = PT.Logo(;
+          light = joinpath(@__DIR__, "logo", "logo.png"),
+          dark = joinpath(@__DIR__, "logo", "logo-dark.png")
+        ),
+        make_jl = joinpath(@__DIR__, "make.jlt"),
+        index_md = joinpath(@__DIR__, "index.md")
+      ),
       PT.Dependabot()
     ])
   PT.generate(templateGithub, repoName)
