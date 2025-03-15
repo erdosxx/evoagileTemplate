@@ -131,7 +131,7 @@ jobs:
           using <<&PKG>>
           DocMeta.setdocmeta!(<<&PKG>>, :DocTestSetup,
             quote
-              using  <<&PKG>>
+              using <<&PKG>>
               using <<&PKG>>.sampleGraph
               using <<&PKG>>.sampleMod: addone
             end;
