@@ -89,7 +89,7 @@ in l.mapAttrs (_: mkShell) {
           cp -r ''${GEN_DIR}/docs .
           cp -r ''${GEN_DIR}/.github .
           rm -rf tmp
-          julia -e 'using Pkg; Pkg.add(["Plots, "GLMakie"]);' --project=.
+          julia -e 'using Pkg; Pkg.add(["Plots", "GLMakie"]);' --project=.
           julia -e 'using Pkg; Pkg.add(["Plots", "GLMakie", "Distributions"]);' --project=docs
         '';
       }
