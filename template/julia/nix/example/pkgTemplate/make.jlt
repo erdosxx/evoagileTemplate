@@ -28,6 +28,7 @@ makedocs(;
         ],
 {{/HAS_ASSETS}}
     ),
+  # remotes=nothing,
     pages=[
       "Home" => "index.md",
     ]
