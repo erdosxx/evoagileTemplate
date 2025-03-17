@@ -24,7 +24,7 @@ This project demonstrates various Markdown features for GitHub README files.
 Here's a simple example of how to use the project:
 ```julia
 julia> using Pkg
-julia> Pkg.add("juliaEnvTest")
+julia> Pkg.add("{{{PKG}}}.jl")
 ```
 
 ## Mathematical Expressions

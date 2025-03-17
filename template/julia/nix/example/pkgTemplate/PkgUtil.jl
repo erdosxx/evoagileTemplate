@@ -65,7 +65,8 @@ function genGithubRepo(userName::String, repoName::String, dir::String)
           dark = joinpath(@__DIR__, "logo", "logo-dark.png")
         ),
         make_jl = joinpath(@__DIR__, "make.jlt"),
-        index_md = joinpath(@__DIR__, "index.md")
+        index_md = joinpath(@__DIR__, "index.md"),
+        assets=String["assets/citations.css"],
       ),
       PT.Dependabot()
     ])

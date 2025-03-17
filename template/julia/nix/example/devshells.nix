@@ -156,7 +156,7 @@ in l.mapAttrs (_: mkShell) {
 
           repSed test/runtests.jl PRJ_NAME $PRJ_NAME
           repSed test/sample/tests.jl PRJ_NAME $PRJ_NAME
-          repSed docs/genplots.jl PRJ_NAME $PRJ_NAME
+          repSed docs/src/graph.md PRJ_NAME $PRJ_NAME
         '';
       }
       {

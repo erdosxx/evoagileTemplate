@@ -1,7 +1,8 @@
 using {{{PKG}}}
 using Documenter
+using DocumenterCitations
 
-include("genplots.jl")
+bib = CitationBibliography(joinpath(@__DIR__, "src", "refs.bib"))
 
 DocMeta.setdocmeta!({{{PKG}}}, :DocTestSetup,
   quote
@@ -29,8 +30,10 @@ makedocs(;
 {{/HAS_ASSETS}}
     ),
   # remotes=nothing,
+    plugins=[bib],
     pages=[
       "Home" => "index.md",
+      "Example" => "graph.md",
     ]
 {{#MAKEDOCS_KWARGS}}
     {{{first}}}={{{second}}},

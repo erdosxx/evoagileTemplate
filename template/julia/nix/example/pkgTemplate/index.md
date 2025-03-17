@@ -6,10 +6,16 @@ CurrentModule = {{{PKG}}}
 
 Documentation for [{{{PKG}}}](https://{{{REPO}}}).
 
-```@index
+```@docs
+{{{PKG}}}.sampleMod
+{{{PKG}}}.sampleMod.addone
+
+```
+# Bibiliography
+```@bibliography
+
 ```
 
-```@autodocs
-Modules = [{{{PKG}}}, {{{PKG}}}.sampleMod, {{{PKG}}}.sampleGraph]
-Order = [:function, :type]
+# Index
+```@index
 ```
