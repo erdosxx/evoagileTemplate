@@ -11,7 +11,7 @@ Documentation for [{{{PKG}}}](https://{{{REPO}}}).
 {{{PKG}}}.sampleMod.addone
 
 ```
-# Bibiliography
+# Bibliography
 ```@bibliography
 
 ```

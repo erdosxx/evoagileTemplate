@@ -1,3 +1,9 @@
+"""
+  sampleMod
+
+Show some exmple function to test.
+
+"""
 module sampleMod
 
 """
