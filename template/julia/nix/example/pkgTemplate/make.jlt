@@ -11,40 +11,40 @@ DocMeta.setdocmeta!({{{PKG}}}, :DocTestSetup,
 recursive=true)
 
 makedocs(;
-    modules=[{{{PKG}}}],
-    authors="{{{AUTHORS}}}",
-    sitename="{{{PKG}}}.jl",
-    format=Documenter.HTML(;
+  modules=[{{{PKG}}}],
+  authors="{{{AUTHORS}}}",
+  sitename="{{{PKG}}}.jl",
+  format=Documenter.HTML(;
 {{#CANONICAL}}
-        canonical="{{{CANONICAL}}}",
+    canonical="{{{CANONICAL}}}",
 {{/CANONICAL}}
 {{#EDIT_LINK}}
-        edit_link={{{EDIT_LINK}}},
+    edit_link={{{EDIT_LINK}}},
 {{/EDIT_LINK}}
-        assets={{^HAS_ASSETS}}String{{/HAS_ASSETS}}[{{^HAS_ASSETS}}],{{/HAS_ASSETS}}
+    assets={{^HAS_ASSETS}}String{{/HAS_ASSETS}}[{{^HAS_ASSETS}}],{{/HAS_ASSETS}}
 {{#ASSETS}}
-            "assets/{{{.}}}",
+    "assets/{{{.}}}",
 {{/ASSETS}}
 {{#HAS_ASSETS}}
-        ],
+    ],
 {{/HAS_ASSETS}}
-    ),
+  ),
   # remotes=nothing,
-    plugins=[bib],
-    pages=[
-      "Home" => "index.md",
-      "Example" => "graph.md",
-    ]
+  plugins=[bib],
+  pages=[
+    "Home" => "index.md",
+    "Example" => "graph.md",
+  ]
 {{#MAKEDOCS_KWARGS}}
-    {{{first}}}={{{second}}},
+  {{{first}}}={{{second}}},
 {{/MAKEDOCS_KWARGS}}
 )
 {{#HAS_DEPLOY}}
 
 deploydocs(;
-    repo="{{{REPO}}}",
+  repo="{{{REPO}}}",
 {{#BRANCH}}
-    devbranch="{{{BRANCH}}}",
+  devbranch="{{{BRANCH}}}",
 {{/BRANCH}}
 )
 {{/HAS_DEPLOY}}
