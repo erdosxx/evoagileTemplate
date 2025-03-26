@@ -111,6 +111,20 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
           echo "DISPLAY=:99.0" >> $GITHUB_ENV
       - uses: julia-actions/cache@v2
+      - name: Cache Quarto
+        uses: actions/cache@v4
+        with:
+          path: tutorials/_freeze  # Quarto Cache
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('tutorials/*.qmd') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-
+      - name: Cache Documenter
+        uses: actions/cache@v4
+        with:
+          path: docs/src/tutorials  # Cache rendered tutorials
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('tutorials/*.qmd') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-
       - name: Configure doc environment
         env:
           DISPLAY: :99.0

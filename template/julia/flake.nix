@@ -2,6 +2,11 @@
   description = "Julia development environment";
 
   inputs = rec {
+    nixpkgs = {
+      # url = "github:NixOS/nixpkgs/nixos-unstable-small";
+      url = "github:NixOS/nixpkgs/fbcdd2bccd1b6960b48578a608b581bff18e7646";
+    };
+
     std = {
       # url = "github:divnix/std";
       url = "github:divnix/std/5b19a01095518d1acbd1975b1903b83ace4fe0dd";
@@ -10,11 +15,6 @@
         inherit nixago;
         nixpkgs.follows = "nixpkgs";
       };
-    };
-
-    nixpkgs = {
-      # url = "github:NixOS/nixpkgs/nixos-unstable-small";
-      url = "github:NixOS/nixpkgs/2ffed2bc3d27861b821f9bec127cf51a4dbfabb4";
     };
 
     devshell = {

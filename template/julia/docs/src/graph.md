@@ -1,4 +1,4 @@
-# Adding plots in md file
+# [Adding plots in md file](@id add_plots)
 
 - By using `@example` name as `sampleGraph` we can combine codes.
   So with one declaration of `using` statement, we use it repeatedly
@@ -9,9 +9,17 @@
 - `ans` variable is defined by Documenter for last command.
   So, without repeating plot command, we can use it to save file.
 
-# Citation Examples
+# Ref Examples
+
+- To show cdf or pdf plot of log normal distribution
+  using GLMakie use [gm\_log\_normal\_plot()](@ref {{PRJ_NAME}}.sampleGraph.gm_log_normal_plot)
+
+# [Citation Examples](@id cite_example)
+
 The introductory guide for Kelly investment is
 **Fortune Formula**[poundstone_fortunes_2006](@cite).
+To add plots see the [instruction](@ref add_plots).
+See main [bibliography](@ref main_bib).
 
 ```@docs
 {{PRJ_NAME}}.sampleGraph.gm_bar_plot
@@ -162,7 +170,7 @@ savefig(ans, "pl_histogram_plot.png"); nothing # hide
 ![](pl_histogram_plot.png)
 
 ```@docs
-{{PRJ_NAME}}.sampleGraph.pl_multiple_series_plot
+{{PRJ_NAME}}..sampleGraph.pl_multiple_series_plot
 ```
 
 ```@example sampleGraph

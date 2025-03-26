@@ -1,0 +1,276 @@
+---
+title: "Introduction to Quarto with Julia"
+author: "Norel Oh"
+date: last-modified
+toc: true
+number-sections: true
+highlight-style: github
+format:
+  julia-html:
+    code-fold: true
+    code-tools: true
+    html-math-method: katex
+bibliography: ../docs/src/refs.bib
+reference-location: margin
+engine: julia
+julia:
+  exeflags: ["--project=.."]
+---
+# 한글 입력
+한글을 통한 자료입력을 할 수 있다면 좋겠다.
+
+::: {.callout-note}
+Open issue: To convert to PDF, Quarto uses XeLaTeX and has an issue to
+typeset Korean fonts. For this document,
+there is no output for Korean sentence.
+:::
+
+# Ref examples
+::: {#thm-line}
+
+# Line
+
+The equation of any straight line, called a linear equation,
+can be written as:
+
+$$
+y = mx + b
+$$
+:::
+
+See @thm-line.
+
+::: {#def-log-normal}
+# Log Normal Distribution
+
+The definition of the Log Normal Distribution in LaTeX input form is: 
+$$
+f(x;\mu, \sigma) = \frac{1}{x\sigma\sqrt{2\pi}}\exp\left(-\frac{(\ln x - \mu)^2}{2\sigma^2}\right)
+$$
+where:
+- $x > 0$ is the random variable
+- $\mu$ is the mean of the natural logarithm of the distribution
+- $\sigma > 0$ is the standard deviation of the natural logarithm of the distribution
+
+This probability density function applies for $x > 0$,
+and the distribution is defined for the domain $(0, \infty)$.
+:::
+See @def-log-normal.
+
+
+Good review using Quarto with Julia:^[See [A year of using Quarto with Julia](https://www.patalt.org/blog/posts/tips-and-tricks-for-using-quarto-with-julia/) ]
+can be found in [Patrick Altmeyer](https://www.patalt.org/) home page.
+
+Black-Scholes (@eq-black-scholes) is a mathematical model that seeks to explain the behavior of financial derivatives, most commonly options:
+
+$$
+\frac{\partial \mathrm C}{ \partial \mathrm t } + \frac{1}{2}\sigma^{2} \mathrm S^{2}
+\frac{\partial^{2} \mathrm C}{\partial \mathrm S^2}
+  + \mathrm r \mathrm S \frac{\partial \mathrm C}{\partial \mathrm S}\ =
+  \mathrm r \mathrm C 
+$$ {#eq-black-scholes}
+
+# Mathematical expressions
+Fourier transform(@eq-fourier-transform) equation:
+$$
+\hat{g}(\vec k) = \int \mathrm{d}^nx g(\vec x)e^{-i\vec x\cdot\vec k} 
+$$ {#eq-fourier-transform}
+
+Inverse Fourier transform(@eq-inverse-fourier-transform) equation:
+$$
+g(\vec x) =
+\int \frac{\mathrm{d}^nk}{(2\pi)^n} \hat{g}(\vec k)
+e^{i\vec k\cdot\vec x}
+$$ {#eq-inverse-fourier-transform}
+
+For Kelly criterion, Fortune's formula[@poundstone_fortunes_2006] is a 
+good book to start.
+Kelly Criterion(@eq-kelly-criterion) equation:
+$$
+\begin{align}
+g'(r) & = p \frac{w}{1+rw} + (1-p) \frac{-l}{1-rl} = 0 \\
+r^* & = \frac{p(w + l) -l}{wl} = \frac{p}{l} - \frac{q}{w}
+\end{align}
+$$ {#eq-kelly-criterion}
+
+# Parametric Plots
+
+Plot function pair (x(u), y(u)). 
+See @fig-parametric for an example.
+
+```{julia}
+#| label: fig-parametric
+#| fig-cap: "Parametric Plots"
+
+using Plots
+
+Plots.plot(sin, x->sin(2x), 0, 2π, leg=false, fill=(0,:lavender))
+```
+
+# Meshscatter barplot animation
+```{julia}
+#| label: fig-makie-meshscatter
+#| echo: true
+#| output: false
+using GLMakie
+
+sz = (40, 40)
+t = Observable(0.0)
+sizes = lift(t) do t
+  [Vec3f(1, 1, 1 + sin((x-y)/3 + t) * cos((x+y)/3 + t))
+    for x in 1:sz[1] for y in 1:sz[2]]
+end
+positions = [(x, y) for x in 1:sz[1] for y in 1:sz[2]]
+f, ax, ms = meshscatter(
+  positions,
+  markersize = sizes,
+  marker = Rect3f((-0.5, -0.5, 0), (1, 1, 1));
+  axis = (; type = Axis3)
+)
+
+record(f, "meshscatter.mp4", 0:1/30:5) do _t
+    t[] = _t
+end
+```
+{{< video meshscatter.mp4 title="Meshscatter barplot animation" >}}
+
+# Volcano plot
+```{julia}
+#| label: fig-volcano
+#| fig-cap: "Volcano Plot"
+using GLMakie
+using DelimitedFiles
+
+volcano = readdlm(Makie.assetpath("volcano.csv"), ',', Float64)
+color = rand(size(volcano)...)
+
+GLMakie.surface(volcano;
+    color,
+    axis=(type=Axis3, azimuth = pi/4))
+```
+
+# Plots using Markie package
+For `Plots` package, see @sec-plots.
+Simple bar chart plots.
+```{julia}
+#| label: fig-gm_bar
+#| fig-cap: "Bar chart plot"
+using {{PRJ_NAME}}.sampleGraph
+gm_bar_plot()
+```
+
+Basic line plot.
+```{julia}
+#| label: fig-gm-basic_line
+#| fig-cap: "Basic line plot"
+gm_basic_line_plot()
+```
+
+Heatmap plot.
+```{julia}
+#| label: fig-gm-heatmap
+#| fig-cap: "Heatmap plot"
+gm_heatmap_plot()
+```
+
+Histogram plot.
+```{julia}
+#| label: fig-gm-histogram
+#| fig-cap: "Heatmap plot"
+gm_histogram_plot()
+```
+
+Multiple series plot.
+```{julia}
+#| label: fig-gm-multiple-series
+#| fig-cap: "Multiple series plot"
+gm_multiple_series_plot()
+```
+
+Scatter plot.
+```{julia}
+#| label: fig-gm-scatter
+#| fig-cap: "Scatter plot"
+gm_scatter_plot()
+```
+
+Subplots plot.
+```{julia}
+#| label: fig-gm-subplots
+#| fig-cap: "Subplots plot"
+gm_subplots_plot()
+```
+
+Log normal plot.
+```{julia}
+#| label: fig-gm-log-normal
+#| fig-cap: "Log normal plot"
+gm_log_normal_plot()
+```
+
+# Plots using Plots package {#sec-plots} 
+
+Bar plot.
+```{julia}
+#| label: fig-pl-bar
+#| fig-cap: "Bar plot"
+pl_bar_plot()
+```
+
+Basic line plot.
+```{julia}
+#| label: fig-pl-basic-line
+#| fig-cap: "Basic line plot"
+pl_basic_line_plot()
+```
+
+Customized plot.
+```{julia}
+#| label: fig-pl-customized
+#| fig-cap: "Customized plot"
+pl_customized_plot()
+```
+
+Heatmap plot.
+```{julia}
+#| label: fig-pl-heatmap
+#| fig-cap: "Heatmap plot"
+pl_heatmap_plot()
+```
+
+Histogram plot.
+```{julia}
+#| label: fig-pl-histogram
+#| fig-cap: "Histogram plot"
+pl_histogram_plot()
+```
+
+Multiple series plot.
+```{julia}
+#| label: fig-pl-multiple-series
+#| fig-cap: "Multiple series plot"
+pl_multiple_series_plot()
+```
+
+Scatter plot.
+```{julia}
+#| label: fig-pl-scatter
+#| fig-cap: "Scatter plot"
+pl_scatter_plot()
+```
+
+Subplots plot.
+```{julia}
+#| label: fig-pl-subplots
+#| fig-cap: "Subplots plot"
+pl_subplots_plot()
+```
+
+Log normal plot with lengend position.
+```{julia}
+#| label: fig-pl-log-normal
+#| fig-cap: "Log normal plot"
+pl_log_normal_plot()
+```
+
+# References

@@ -1,0 +1,13 @@
+project:
+  title: '{{PRJ_NAME}}'
+  output-dir: ../docs/src/tutorials
+  render: # specify some
+    - '*.qmd'
+    - '!NotThisFile.qmd'
+
+format: # render to md
+  html:
+    html-math-method: katex
+  commonmark:
+    variant: -tex_math_dollars
+    wrap: preserve

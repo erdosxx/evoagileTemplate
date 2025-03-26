@@ -14,29 +14,60 @@ let
   sed = getExe pkgs.gnused;
   gh = getExe pkgs.github-cli;
   git = getExe pkgs.git;
+  qto = getExe pkgs.quarto;
 in l.mapAttrs (_: mkShell) {
   default = { ... }: {
     name = "Julia devshell";
 
     imports = [ std.std.devshellProfiles.default ];
 
-    packages = with pkgs;
-      [
-        # git
-        (julia_111-bin.withPackages.override { precompile = true; } [
-          "Plots"
-          "GraphRecipes"
-          "Graphs"
-          "CairoMakie"
-          "Documenter"
-          "Coverage"
-          "OhMyREPL"
-          "Revise"
-          "SpecialFunctions"
-          # "GLMakie"
-          "Makie"
-        ])
-      ];
+    packages = with pkgs; [
+      quarto
+      librsvg # for quarto to convert to pdf
+      noto-fonts
+      noto-fonts-cjk-sans
+      noto-fonts-extra
+      stix-otf
+      stix-two
+      fira-math
+      texliveFull
+      (julia_111-bin.withPackages.override {
+        precompile = true;
+        extraLibs = [
+          "${pkgs.libGL}/lib"
+          "${pkgs.xorg.libX11}/lib"
+          "${pkgs.xorg.libXcursor}/lib"
+          "${pkgs.xorg.libXi}/lib"
+          "${pkgs.xorg.libXinerama}/lib"
+          "${pkgs.xorg.libXrandr}/lib"
+        ];
+        packageOverrides = {
+          "REPLVim" = fetchFromGitHub {
+            owner = "andreypopp";
+            repo = "julia-repl-vim";
+            rev = "49dc50348df20cc54628b4599d0ce89bd07213e5";
+            sha256 = "sha256-M5Tx3iqCTqUxwuw7bbyJKI3sHHanZYvDrZ3r0p+LRl4=";
+          };
+        };
+      } [
+        "Plots"
+        "GraphRecipes"
+        "Graphs"
+        "CairoMakie"
+        "Documenter"
+        "Coverage"
+        "OhMyREPL"
+        "Revise"
+        "REPLVim"
+        "SpecialFunctions"
+        # "GLMakie"
+        "DataFrames"
+        "Statistics"
+        # "GtkReactive"
+        # "GtkObservables"
+        "QuartoNotebookRunner"
+      ])
+    ];
 
     nixago = with configs; [ just ];
 
@@ -89,10 +120,12 @@ in l.mapAttrs (_: mkShell) {
           cp -r ''${GEN_DIR}/docs .
           cp -r ''${GEN_DIR}/.github .
           rm -rf tmp
-          julia -e 'using Pkg; Pkg.add(["Plots", "GLMakie", "Distributions"]);' \
+          julia -e 'using Pkg; Pkg.add(["Plots", "GLMakie", "Distributions", "QuartoNotebookRunner"]);' \
           --project=.
           julia -e 'using Pkg; Pkg.add(["Plots", "GLMakie", "Distributions", "DocumenterCitations"]);' \
           --project=docs
+          qto add pat-alt/quarto-julia
+          qto add pat-alt/documenterjl
         '';
       }
       {
@@ -159,6 +192,8 @@ in l.mapAttrs (_: mkShell) {
           repSed test/runtests.jl PRJ_NAME $PRJ_NAME
           repSed test/sample/tests.jl PRJ_NAME $PRJ_NAME
           repSed docs/src/graph.md PRJ_NAME $PRJ_NAME
+          repSed tutorials/_quarto.yml PRJ_NAME $PRJ_NAME
+          repSed tutorials/quartoEx.qmd PRJ_NAME $PRJ_NAME
         '';
       }
       {
@@ -194,6 +229,28 @@ in l.mapAttrs (_: mkShell) {
           ${git} push origin HEAD
         '';
       }
+      {
+        name = "qto";
+        category = "quarto";
+        help = "quarto wrapper to fix write permission.";
+        command = ''
+          target="''${XDG_RUNTIME_DIR}/julia/Project.toml"
+          if [ -f "$target" ] && [ ! -w "$target" ]; then
+            echo "File $target is not writable."
+            echo "Changing permissions to 744."
+            chmod 744 $target
+          fi
+          ${qto} $@
+        '';
+      }
+      {
+        name = "qts";
+        category = "quarto";
+        help = "quarto extensions status";
+        command = ''
+          ${qto} list extensions
+        '';
+      }
     ];
 
     env = [
@@ -219,6 +276,10 @@ in l.mapAttrs (_: mkShell) {
       {
         name = "PRJ_NAME";
         eval = "$(gprn)";
+      }
+      {
+        name = "XDG_RUNTIME_DIR";
+        eval = "/run/user/$(id -u)";
       }
       # {
       #   name = "JULIA_CUDA_USE_BINARYBUILDER";

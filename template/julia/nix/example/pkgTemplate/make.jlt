@@ -2,6 +2,10 @@ using {{{PKG}}}
 using Documenter
 using DocumenterCitations
 
+tutorial_folder = (@__DIR__) * "/../tutorials"
+run(`qto render $(tutorial_folder)`)
+
+# end
 bib = CitationBibliography(joinpath(@__DIR__, "src", "refs.bib"))
 
 DocMeta.setdocmeta!({{{PKG}}}, :DocTestSetup,
@@ -29,7 +33,7 @@ makedocs(;
     ],
 {{/HAS_ASSETS}}
   ),
-  # remotes=nothing,
+  remotes=nothing,
   plugins=[bib],
   pages=[
     "Home" => "index.md",
