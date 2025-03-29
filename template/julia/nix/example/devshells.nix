@@ -15,6 +15,11 @@ let
   gh = getExe pkgs.github-cli;
   git = getExe pkgs.git;
   qto = getExe pkgs.quarto;
+  cat = "${pkgs.coreutils}/bin/cat";
+  cp = "${pkgs.coreutils}/bin/cp";
+  rm = "${pkgs.coreutils}/bin/rm";
+  sort = "${pkgs.coreutils}/bin/sort";
+  uniq = "${pkgs.coreutils}/bin/uniq";
 in l.mapAttrs (_: mkShell) {
   default = { ... }: {
     name = "Julia devshell";
@@ -111,15 +116,15 @@ in l.mapAttrs (_: mkShell) {
           setupTmp
           gentp tmp
           GEN_DIR="tmp/''${PRJ_ROOT}"
-          cp ''${GEN_DIR}/LICENSE .
-          cp ''${GEN_DIR}/.gitignore .
-          cp ''${GEN_DIR}/.JuliaFormatter.toml .
-          cp ''${GEN_DIR}/Manifest.toml .
-          cp ''${GEN_DIR}/Project.toml .
-          cp ''${GEN_DIR}/README.md .
-          cp -r ''${GEN_DIR}/docs .
-          cp -r ''${GEN_DIR}/.github .
-          rm -rf tmp
+          ${cp} ''${GEN_DIR}/LICENSE .
+          ${cat} .gitignore_init ''${GEN_DIR}/.gitignore | ${sort} | ${uniq} > .gitignore
+          ${cp} ''${GEN_DIR}/.JuliaFormatter.toml .
+          ${cp} ''${GEN_DIR}/Manifest.toml .
+          ${cp} ''${GEN_DIR}/Project.toml .
+          ${cp} ''${GEN_DIR}/README.md .
+          ${cp} -r ''${GEN_DIR}/docs .
+          ${cp} -r ''${GEN_DIR}/.github .
+          ${rm} -rf tmp
           julia -e 'using Pkg; Pkg.add(["Plots", "GLMakie", "Distributions", "QuartoNotebookRunner"]);' \
           --project=.
           julia -e 'using Pkg; Pkg.add(["Plots", "GLMakie", "Distributions", "DocumenterCitations"]);' \
