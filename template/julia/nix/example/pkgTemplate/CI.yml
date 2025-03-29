@@ -133,6 +133,17 @@ jobs:
           using Pkg
           Pkg.develop(PackageSpec(path=pwd()))
           Pkg.instantiate()
+      - name: Quarto setup
+        uses: quarto-dev/quarto-actions/setup@v2
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tinytex: true
+          version: 1.6.42
+      - name: Install quarto Plugin, julia
+        run: |
+          cd tutorials
+          quarto add pat-alt/quarto-julia --no-prompt
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-docdeploy@v1
         env:

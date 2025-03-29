@@ -42,7 +42,7 @@ function genGithubRepo(userName::String, repoName::String, dir::String)
         x64 = true,
         x86 = false,
         coverage = true,
-        extra_versions = ["1.8", "1.9", "1.10", "1.11", "nightly"]),
+        extra_versions = ["1.8", "1.9", "1.10", "1.11"]),
       PT.CompatHelper(; destination = "CompatHelper.yml", cron = "0 0 * * *"),
       PT.TagBot(;
         destination = "TagBot.yml",

@@ -3,7 +3,7 @@ using Documenter
 using DocumenterCitations
 
 tutorial_folder = (@__DIR__) * "/../tutorials"
-run(`qto render $(tutorial_folder)`)
+run(`quarto render $(tutorial_folder)`)
 
 # end
 bib = CitationBibliography(joinpath(@__DIR__, "src", "refs.bib"))
