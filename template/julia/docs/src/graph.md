@@ -170,7 +170,7 @@ savefig(ans, "pl_histogram_plot.png"); nothing # hide
 ![](pl_histogram_plot.png)
 
 ```@docs
-{{PRJ_NAME}}..sampleGraph.pl_multiple_series_plot
+{{PRJ_NAME}}.sampleGraph.pl_multiple_series_plot
 ```
 
 ```@example sampleGraph

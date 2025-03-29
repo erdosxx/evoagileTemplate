@@ -124,8 +124,7 @@ in l.mapAttrs (_: mkShell) {
           --project=.
           julia -e 'using Pkg; Pkg.add(["Plots", "GLMakie", "Distributions", "DocumenterCitations"]);' \
           --project=docs
-          qto add pat-alt/quarto-julia
-          qto add pat-alt/documenterjl
+          cd tutorials && qto add pat-alt/quarto-julia --no-prompt
         '';
       }
       {
