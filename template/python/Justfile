@@ -1,0 +1,20 @@
+set shell := ["bash", "-c"]
+
+re:
+  direnv reload
+
+up:
+  nix flake update
+
+qt:
+  jupyter qtconsole &
+
+test:
+  pytest
+
+tco:
+  pytest --cov=src
+
+repl:
+  nix repl -f flake:nixpkgs
+

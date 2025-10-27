@@ -1,87 +1,102 @@
 {
-  description = "Application packaged using poetry2nix";
+  description = "template application using uv2nix";
 
   inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-    # nixpkgs.url = "nixpkgs";
-    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # nixpkgs.url = "github:NixOS/nixpkgs?&rev=632d9a851e1db6736135f73df4dae76469a72168";
-    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
-    poetry2nix = {
-      # url = "github:nix-community/poetry2nix?&rev=b90fbfbb71d4da8de2d8e4dba0fa85c7cf07015f";
-      url = "github:nix-community/poetry2nix";
-      # url =
-      #   "github:nix-community/poetry2nix?&rev=8c25e871bba3f472e1569bbf6c0f52dcc34bf2a4";
+
+    pyproject-nix = {
+      url = "github:pyproject-nix/pyproject.nix";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    uv2nix = {
+      url = "github:pyproject-nix/uv2nix";
+      inputs = {
+        pyproject-nix.follows = "pyproject-nix";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+
+    pyproject-build-systems = {
+      url = "github:pyproject-nix/build-system-pkgs";
+      inputs = {
+        pyproject-nix.follows = "pyproject-nix";
+        uv2nix.follows = "uv2nix";
+        nixpkgs.follows = "nixpkgs";
+      };
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, poetry2nix }:
+  outputs = { self, nixpkgs, flake-utils, uv2nix, pyproject-nix
+    , pyproject-build-systems, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        # see https://github.com/nix-community/poetry2nix/tree/master#api for more functions and examples.
-        pkgs = nixpkgs.legacyPackages.${system};
-        inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; })
-          mkPoetryApplication defaultPoetryOverrides;
-
-        # Ex: pypkgs-build-requirements = { textgrad = [ "setuptools" ]; };
-        pypkgs-build-requirements = { };
-
-        p2n-overrides = defaultPoetryOverrides.extend (final: prev:
-          builtins.mapAttrs (package: build-requirements:
-            (builtins.getAttr package prev).overridePythonAttrs (old: {
-              buildInputs = (old.buildInputs or [ ]) ++ (builtins.map (pkg:
-                if builtins.isString pkg then
-                  builtins.getAttr pkg prev
-                else
-                  pkg) build-requirements);
-            })) pypkgs-build-requirements);
-        python_ver = "python312";
-        pythonPackages = pkgs.${python_ver + "Packages"};
-      in {
-        packages = {
-          myapp = mkPoetryApplication {
-            projectDir = self;
-            # projectDir = ./.;
-            python = pkgs.${python_ver};
-            preferWheels = true;
-            overrides = p2n-overrides;
-          };
-          default = self.packages.${system}.myapp;
+        # 1. Load Project Workspace (parses pyproject.toml, uv.lock)
+        workspace = uv2nix.lib.workspace.loadWorkspace {
+          workspaceRoot = ./.; # Root of your flake/project
         };
 
-        # Shell for app dependencies.
-        #
-        #     nix develop
-        #
-        # Use this shell for developing your app.
-        devShells.default =
-          pkgs.mkShell { inputsFrom = [ self.packages.${system}.myapp ]; };
+        # 2. Generate Nix Overlay from uv.lock (via workspace)
+        overlay = workspace.mkPyprojectOverlay {
+          sourcePreference = "wheel"; # Or "sdist"
+        };
 
-        # Shell for poetry.
-        #
-        #     nix develop .#poetry
-        #
-        # Use this shell for changes to pyproject.toml and poetry.lock.
-        devShells.poetry = pkgs.mkShell {
-          inputsFrom = [ self.packages.${system}.myapp ];
-          packages = with pkgs; [
-            # python311
-            # (poetry.override { python3 = python311; })
-            poetry
-            # for qtconsole
-            pythonPackages.pyside2
-            # python312Packages.setuptools
-            qt5Full
-            gnugrep
-            gawk
-            pass
-          ];
-          shellHook = ''
-            alias vi="nvim"
-            just qt
-          '';
+        editableOverlay =
+          workspace.mkEditablePyprojectOverlay { root = "$REPO_ROOT"; };
+
+        # 3. Placeholder for Your Custom Package Overrides
+        myCustomOverrides = final: prev:
+          {
+            # e.g., some-package = prev.some-package.overridePythonAttrs (...);
+          };
+
+        pkgs = import nixpkgs { inherit system; };
+
+        mkPythonSet = { python }:
+          let
+            basePythonSet =
+              pkgs.callPackage pyproject-nix.build.packages { inherit python; };
+          in basePythonSet.overrideScope (nixpkgs.lib.composeManyExtensions [
+            pyproject-build-systems.overlays.default # For build tools
+            overlay # Your locked dependencies
+            editableOverlay # For editable installs
+            myCustomOverrides # Your fixes
+          ]);
+
+        # --- This is where your project's metadata is accessed ---
+        projectInToml =
+          (builtins.fromTOML (builtins.readFile ./pyproject.toml)).project;
+
+        mkPyTomlEnv = { python }:
+          let pythonSet = mkPythonSet { inherit python; };
+          in pythonSet.mkVirtualEnv (projectInToml.name + "-env")
+          workspace.deps.default; # Uses deps from pyproject.toml [project.dependencies]
+
+        # python packages that need to be installed in flake not uv.
+        mkPyPkgNotUV = { pyPkgs }: with pyPkgs; [ pyqt6 matplotlib ];
+
+        # define default python version to setup devshell and package
+        pyDefaultVer = "313";
+      in {
+        devShells = pkgs.lib.mapAttrs (_: pkgs.mkShell)
+          ((import ./nix/shells.nix) {
+            inherit pkgs mkPythonSet mkPyTomlEnv mkPyPkgNotUV pyDefaultVer;
+          });
+
+        packages = pkgs.lib.mapAttrs (_: pkgs.stdenv.mkDerivation)
+          ((import ./nix/packages.nix) {
+            inherit pkgs mkPyTomlEnv projectInToml mkPyPkgNotUV pyDefaultVer;
+          });
+
+        # App for `nix run`
+        apps = let pname = projectInToml.name;
+        in rec {
+          default = {
+            type = "app";
+            program = "${self.packages.${system}.default}/bin/${pname}";
+          };
+          ${pname} = default;
         };
       });
 }

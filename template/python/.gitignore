@@ -1,0 +1,6 @@
+.direnv
+__pycache__
+.coverage
+result
+nix/replace-in-place.sh
+nix/setup_prj.sh

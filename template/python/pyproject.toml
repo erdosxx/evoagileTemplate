@@ -1,33 +1,33 @@
-[tool.poetry]
-name = "<Project Name>"
+[project]
+name = "prj_name"
 version = "0.1.0"
-description = "<Project Description>"
-authors = ["Norel <norel.evoagile@gmail.com>"]
-license = "MIT"
-readme = "README.md"
-package-mode = false
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "black>=25.9.0",
+    "jupyter>=1.1.1",
+    "mypy>=1.18.2",
+    "numpy>=2.3.4",
+    "pandas>=2.3.3",
+    "pylint>=4.0.2",
+    "pynvim>=0.6.0",
+    "pytest",
+    "pytest-bdd>=8.1.0",
+    "pytest-cov",
+    "pytest-mock>=3.15.1",
+    "pytest-repeat>=0.9.4",
+    "pytest-xdist>=3.8.0",
+    "qtconsole>=5.7.0",
+    "qtpy>=2.4.3",
+    "ruamel-yaml>=0.18.16",
+    "scipy>=1.16.2",
+    "seaborn>=0.13.2",
+    "typer>=0.20.0",
+]
 
-# [virtualenv]
-# in-project = true
-
-[tool.poetry.dependencies]
-python = "^3.12"
-numpy = "^2.1.0"
-matplotlib = "^3.9.2"
-
-[tool.poetry.group.dev.dependencies]
-ipython = "^8.26.0"
-ipykernel = "^6.29.5"
-jupyter = "^1.0.0"
-black = "^24.4.2"
-pylint = "^3.2.5"
-# PyQt5 = "^5.15.10"
-pytest = "^8.2.2"
-pynvim = "^0.5.0"
-jupyter-core = "^5.7.2"
-qtconsole = "^5.5.2"
-pyright = "^1.1.377"
+[project.scripts]
+hello = "prj_name:hello"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.8.14,<0.9.0"]
+build-backend = "uv_build"
