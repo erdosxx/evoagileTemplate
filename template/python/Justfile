@@ -18,3 +18,20 @@ tco:
 repl:
   nix repl -f flake:nixpkgs
 
+show:
+  nix flake show
+
+run:
+  nix run .#default
+
+build:
+  nix build .#default
+
+dockerbuild:
+  nix build .#container
+
+dockerrun:
+  docker load < ./result
+  # For streamLayeredImage
+  # ./result | docker image load
+  docker run -it --rm prj_name:latest
