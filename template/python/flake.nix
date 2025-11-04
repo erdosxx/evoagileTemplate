@@ -31,6 +31,19 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+
+    nix-ai-tools.url = "github:numtide/nix-ai-tools";
+
+    mynix-ai-tools = {
+      url = "github:erdosxx/nix-ai-tools";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    backlog-md = {
+      # url = "github:MrLesk/Backlog.md";
+      url = "github:erdosxx/Backlog.md";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs:

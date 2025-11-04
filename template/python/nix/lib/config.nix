@@ -1,10 +1,16 @@
-{ flake, inputs, ... }: {
+{ flake, inputs, ... }:
+let
+  numtide-ai-tools = { system }: inputs.nix-ai-tools.packages.${system};
+  backlog-md = { system }: inputs.backlog-md.packages.${system}.default;
+  myopencode = { system }: inputs.mynix-ai-tools.packages.${system}.opencode;
+in {
   # define default python version to setup devshell and package
   pyDefaultVer = "313";
 
   # base packages for devshell
-  basePkgs = { pkgs }:
-    with pkgs; [
+  basePkgs = { pkgs, system, }:
+    with pkgs;
+    [
       # pylyzer
       pyright
       just
@@ -13,7 +19,32 @@
       qt6.qtbase
       qt6.qtsvg
       gemini-cli
-    ];
+    ] ++ [ (backlog-md { inherit system; }) (myopencode { inherit system; }) ]
+    ++ (with numtide-ai-tools { inherit system; }; [
+      amp
+      catnip
+      claude-code
+      claude-code-acp
+      claude-code-router
+      claude-desktop
+      claudebox
+      code
+      coderabbit-cli
+      codex
+      codex-acp
+      copilot-cli
+      crush
+      cursor-agent
+      droid
+      eca
+      forge
+      goose-cli
+      groq-code-cli
+      nanocoder
+      # opencode
+      qwen-code
+      spec-kit
+    ]);
 
   # python packages that need to be installed in flake not uv.
   # following pkgs need to setup here rather than uv(add)

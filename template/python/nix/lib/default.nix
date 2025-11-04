@@ -36,11 +36,11 @@ in rec {
     in pythonSet.mkVirtualEnv (projectInToml.name + "-env")
     workspace.deps.default; # Uses deps from pyproject.toml [project.dependencies]
 
-  shellTempl = { pyVer, pkgs, }:
+  shellTempl = { pyVer, pkgs, system, }:
     let
       python = pkgs."python${pyVer}";
       pyPkgs = pkgs."python${pyVer}Packages";
-      bPkgs = basePkgs {inherit pkgs;};
+      bPkgs = basePkgs { inherit pkgs system; };
       pythonSet = mkPythonSet { inherit python pkgs; };
       pyTomlEnv = mkPyTomlEnv { inherit python pkgs; };
       pyPkgsNotUV = mkPyPkgNotUV { inherit pyPkgs; };

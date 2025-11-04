@@ -1,7 +1,6 @@
-{ pkgs, flake, ... }:
-let
-  inherit (flake.lib) shellTempl pyDefaultVer;
+{ pkgs, flake, system, ... }:
+let inherit (flake.lib) shellTempl pyDefaultVer;
 in pkgs.mkShell (shellTempl {
-  inherit pkgs;
+  inherit pkgs system;
   pyVer = pyDefaultVer;
 })
