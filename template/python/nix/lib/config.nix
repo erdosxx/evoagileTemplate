@@ -43,7 +43,7 @@ in {
       nanocoder
       # opencode
       qwen-code
-      spec-kit
+      # spec-kit  # have side effect to change python version to 3.13
     ]);
 
   # python packages that need to be installed in flake not uv.
