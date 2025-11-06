@@ -44,9 +44,10 @@ in rec {
       pythonSet = mkPythonSet { inherit python pkgs; };
       pyTomlEnv = mkPyTomlEnv { inherit python pkgs; };
       pyPkgsNotUV = mkPyPkgNotUV { inherit pyPkgs; };
+      shellname = "pkg${pyVer}";
     in {
       packages = bPkgs ++ pyPkgsNotUV ++ [ pyTomlEnv ];
-      shellHook = config.shellHook { inherit pkgs pythonSet; };
+      shellHook = config.shellHook { inherit pkgs pythonSet shellname; };
     };
 
   mkPkg = { pyVer, pkgs, }:

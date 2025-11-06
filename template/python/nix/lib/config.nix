@@ -56,7 +56,7 @@ in {
       # e.g., some-package = prev.some-package.overridePythonAttrs (...);
     };
 
-  shellHook = { pkgs, pythonSet, }:
+  shellHook = { pkgs, pythonSet, shellname, }:
     let
       getExe = pkgs.lib.getExe;
       git = getExe pkgs.git;
@@ -75,6 +75,7 @@ in {
       export UV_PYTHON_DOWNLOADS=never
       export REPO_ROOT=$(${git} rev-parse --show-toplevel)
       export GEMINI_API_KEY="$(${pass} gemini/key1)"
+      export DEVSHELL_NAME=${shellname}
       # Conventionally python project name should be all lower case letters
       export PRJ_NAME=$(${basename} $(${echo} $REPO_ROOT) | ${tr} '[:upper:]' '[:lower:]')
 
